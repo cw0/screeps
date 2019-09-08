@@ -1,0 +1,29 @@
+{
+  "name": "screeps",
+  "version": "1.0.0",
+  "description": "all my screeps ai",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cw0/screeps.git"
+  },
+  "author": "cw0",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cw0/screeps/issues"
+  },
+  "homepage": "https://github.com/cw0/screeps#readme",
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "grunt": "^1.0.4",
+    "grunt-screeps": "^1.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.3.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
+  }
+}
