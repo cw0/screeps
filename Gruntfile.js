@@ -12,7 +12,7 @@ const gruntTask = (grunt) => {
         ptr: false,
       },
       dist: {
-        src: ['dist/*.js'],
+        src: ['src/*.js'],
       },
     },
   });
