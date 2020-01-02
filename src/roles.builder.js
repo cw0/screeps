@@ -1,3 +1,5 @@
+const roleUpgrader = require('./roles.upgrader');
+
 module.exports = {
   run: (creep) => {
     if (creep.memory.working === true && creep.carry.energy === 0) {
@@ -7,15 +9,15 @@ module.exports = {
     }
 
     if (creep.memory.working === true) {
-      const structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-        filter: (s) => s.energy < s.energyCapacity,
-      });
-
-      if (structure) {
-        if (creep.transfer(structure, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-          creep.moveTo(structure);
+      //TODO find closest spawn
+      const constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+      if (constructionSite) {
+        if (creep.build(constructionSite) === ERR_NOT_IN_RANGE) {
+          creep.moveTo(constructionSite);
         }
-      } // TODO fallback if something breaks?
+      } else {
+        roleUpgrader.run(creep);
+      }
     } else {
       const source = creep.pos.findClosestByPath(FIND_SOURCES);
       if (creep.harvest(source) === ERR_NOT_IN_RANGE) {

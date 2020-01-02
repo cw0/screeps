@@ -1,3 +1,5 @@
+const builderRole = require('./roles.builder');
+
 module.exports = {
   run: (creep) => {
     if (creep.memory.working === true && creep.carry.energy === 0) {
@@ -7,15 +9,17 @@ module.exports = {
     }
 
     if (creep.memory.working === true) {
-      const structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-        filter: (s) => s.energy < s.energyCapacity,
+      const structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        filter: (s) => s.hits < s.hitsMax && s.structureType !== STRUCTURE_WALL,
       });
 
       if (structure) {
-        if (creep.transfer(structure, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+        if (creep.repair(structure) === ERR_NOT_IN_RANGE) {
           creep.moveTo(structure);
         }
-      } // TODO fallback if something breaks?
+      } else {
+        builderRole.run(creep);
+      }
     } else {
       const source = creep.pos.findClosestByPath(FIND_SOURCES);
       if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
