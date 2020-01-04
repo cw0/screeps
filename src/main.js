@@ -1,12 +1,15 @@
+require('./prototype.spawn')();
 const harvesterRole = require('./roles.harvester');
 const upgraderRole = require('./roles.upgrader');
 const builderRole = require('./roles.builder');
 const repairerRole = require('./roles.repairer');
+const wallRepairerRole = require('./roles.wallRepairer');
 
-const minimumNumberOfHarvesters = 10;
+const minimumNumberOfHarvesters = 1;
 const minimumNumberOfUpgraders = 1;
 const minimumNumberOfBuilders = 1;
-const minimumNumberOfRepairers = 2;
+const minimumNumberOfRepairers = 1;
+const minimumNumberOfWallRepairers = 1;
 
 const loop = () => {
   // clear memory
@@ -34,6 +37,10 @@ const loop = () => {
         repairerRole.run(creep);
         break;
       }
+      case 'wallRepairer': {
+        wallRepairerRole.run(creep);
+        break;
+      }
       default: {
         harvesterRole.run(creep);
         break;
@@ -41,41 +48,48 @@ const loop = () => {
     }
   });
 
+  // Tower Controls
+  const towers = Game.spawns.Spawn1.room.find(FIND_STRUCTURES, {
+    filter: (s) => s.structureType === STRUCTURE_TOWER,
+  });
+  if (towers) {
+    towers.forEach((tower) => {
+      const target = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+      if (target) {
+        tower.attack(target);
+      }
+    });
+  }
+
   const numberOfHarvesters = _.sum(Game.creeps, (c) => c.memory.role === 'harvester');
   const numberOfUpgraders = _.sum(Game.creeps, (c) => c.memory.role === 'upgrader');
   const numberOfBuilders = _.sum(Game.creeps, (c) => c.memory.role === 'builder');
   const numberOfRepairers = _.sum(Game.creeps, (c) => c.memory.role === 'repairer');
+  const numberOfWallRepairers = _.sum(Game.creeps, (c) => c.memory.role === 'wallRepairer');
+
+  const energy = Game.spawns.Spawn1.room.energyCapacityAvailable;
 
   let name;
 
   if (numberOfHarvesters < minimumNumberOfHarvesters) {
-    name = Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], undefined, {
-      role: 'harvester',
-      working: false,
-    });
+    name = Game.spawns.Spawn1.createCustomCreep(energy, 'harvester');
+    if (name === ERR_NOT_ENOUGH_ENERGY && numberOfHarvesters === 0) {
+      name = Game.spawns.Spawn1.createCustomCreep(Game.spawns.Spawn1.room.energyAvailable, 'harvester');
+    }
   } else if (numberOfUpgraders < minimumNumberOfUpgraders) {
-    name = Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], undefined, {
-      role: 'upgrader',
-      working: false,
-    });
+    name = Game.spawns.Spawn1.createCustomCreep(energy, 'upgrader');
   } else if (numberOfRepairers < minimumNumberOfRepairers) {
-    name = Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], undefined, {
-      role: 'repairer',
-      working: false,
-    });
+    name = Game.spawns.Spawn1.createCustomCreep(energy, 'repairer');
   } else if (numberOfBuilders < minimumNumberOfBuilders) {
-    name = Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], undefined, {
-      role: 'builder',
-      working: false,
-    });
+    name = Game.spawns.Spawn1.createCustomCreep(energy, 'builder');
+  } else if (numberOfWallRepairers < minimumNumberOfWallRepairers) {
+    name = Game.spawns.Spawn1.createCustomCreep(energy, 'wallRepairer');
   } else {
-    name = Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], undefined, {
-      role: 'builder',
-      working: false,
-    });
+    name = Game.spawns.Spawn1.createCustomCreep(energy, 'builder');
   }
+
   if (!(name < 0)) {
-    console.log('Spawned new creep: ', name);
+    console.log(`Spawned new ${Game.creeps[name].memory.role} creep: ${name}`);
   }
 };
 
