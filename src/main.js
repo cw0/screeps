@@ -5,8 +5,8 @@ const builderRole = require('./roles.builder');
 const repairerRole = require('./roles.repairer');
 const wallRepairerRole = require('./roles.wallRepairer');
 
-const minimumNumberOfHarvesters = 1;
-const minimumNumberOfUpgraders = 1;
+const minimumNumberOfHarvesters = 2;
+const minimumNumberOfUpgraders = 2;
 const minimumNumberOfBuilders = 1;
 const minimumNumberOfRepairers = 1;
 const minimumNumberOfWallRepairers = 1;
@@ -14,7 +14,7 @@ const minimumNumberOfWallRepairers = 1;
 const loop = () => {
   // clear memory
   Object.values(Memory.creeps).forEach(((name) => {
-    if (Game.creeps[name] === undefined) {
+    if (!Game.creeps[name]) {
       delete Memory.creeps[name];
     }
   }));
@@ -67,7 +67,7 @@ const loop = () => {
   const numberOfRepairers = _.sum(Game.creeps, (c) => c.memory.role === 'repairer');
   const numberOfWallRepairers = _.sum(Game.creeps, (c) => c.memory.role === 'wallRepairer');
 
-  const energy = Game.spawns.Spawn1.room.energyCapacityAvailable;
+  const energy = Math.floor(Game.spawns.Spawn1.room.energyCapacityAvailable / 2);
 
   let name;
 

@@ -14,4 +14,8 @@ module.exports = () => {
 
     return this.createCreep(body, undefined, { role: roleName, working: false });
   };
+
+  StructureSpawn.prototype.createLongDistanceHarvester = function CreateLongDistanceHarvester(energy) {
+
+  };
 };
