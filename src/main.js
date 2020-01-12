@@ -4,12 +4,16 @@ const upgraderRole = require('./roles.upgrader');
 const builderRole = require('./roles.builder');
 const repairerRole = require('./roles.repairer');
 const wallRepairerRole = require('./roles.wallRepairer');
+const longDistanceHarvesterRole = require('./roles.longDistanceHarvester');
 
 const minimumNumberOfHarvesters = 2;
 const minimumNumberOfUpgraders = 2;
 const minimumNumberOfBuilders = 1;
 const minimumNumberOfRepairers = 1;
 const minimumNumberOfWallRepairers = 1;
+const minimumNumberOfLongDistanceHarvestersNorth = 1;
+const minimumNumberOfLongDistanceHarvestersEast = 1;
+const home = 'E46S9';
 
 const loop = () => {
   // clear memory
@@ -41,6 +45,10 @@ const loop = () => {
         wallRepairerRole.run(creep);
         break;
       }
+      case 'longDistanceHarvester': {
+        longDistanceHarvesterRole.run(creep);
+        break;
+      }
       default: {
         harvesterRole.run(creep);
         break;
@@ -66,6 +74,10 @@ const loop = () => {
   const numberOfBuilders = _.sum(Game.creeps, (c) => c.memory.role === 'builder');
   const numberOfRepairers = _.sum(Game.creeps, (c) => c.memory.role === 'repairer');
   const numberOfWallRepairers = _.sum(Game.creeps, (c) => c.memory.role === 'wallRepairer');
+  const numberOfLongDistanceHarvestersNorth = _.sum(Game.creeps, (c) => c.memory.role === 'longDistanceHarvester'
+                                                                        && c.memory.target === 'E46S8');
+  const numberOfLongDistanceHarvestersEast = _.sum(Game.creeps, (c) => c.memory.role === 'longDistanceHarvester'
+                                                                       && c.memory.target === 'E47S9');
 
   const energy = Math.floor(Game.spawns.Spawn1.room.energyCapacityAvailable / 2);
 
@@ -84,6 +96,10 @@ const loop = () => {
     name = Game.spawns.Spawn1.createCustomCreep(energy, 'builder');
   } else if (numberOfWallRepairers < minimumNumberOfWallRepairers) {
     name = Game.spawns.Spawn1.createCustomCreep(energy, 'wallRepairer');
+  } else if (numberOfLongDistanceHarvestersEast < minimumNumberOfLongDistanceHarvestersEast) {
+    name = Game.spawns.Spawn1.createLongDistanceHarvester(energy, 5, home, 'E47S9', 0);
+  } else if (numberOfLongDistanceHarvestersNorth < minimumNumberOfLongDistanceHarvestersNorth) {
+    name = Game.spawns.Spawn1.createLongDistanceHarvester(energy, 5, home, 'E46S8', 0);
   } else {
     name = Game.spawns.Spawn1.createCustomCreep(energy, 'builder');
   }

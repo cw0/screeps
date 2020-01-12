@@ -15,7 +15,32 @@ module.exports = () => {
     return this.createCreep(body, undefined, { role: roleName, working: false });
   };
 
-  StructureSpawn.prototype.createLongDistanceHarvester = function CreateLongDistanceHarvester(energy) {
+  StructureSpawn.prototype.createLongDistanceHarvester = function CreateLongDistanceHarvester(
+    energy,
+    numberOfWorkParts,
+    home,
+    target,
+    sourceIndex,
+  ) {
+    const body = [];
+    for (let i = 0; i < numberOfWorkParts; i += 1) {
+      body.push(WORK);
+    }
+    energy -= 150 * numberOfWorkParts;
+    const numberOfParts = Math.floor(energy / 100);
+    for (let i = 0; i < numberOfParts; i += 1) {
+      body.push(CARRY);
+    }
+    for (let i = 0; i < numberOfParts + numberOfWorkParts; i += 1) {
+      body.push(MOVE);
+    }
 
+    return this.createCreep(body, undefined, {
+      role: 'longDistanceHarvester',
+      working: false,
+      home,
+      target,
+      sourceIndex,
+    });
   };
 };
