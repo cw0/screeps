@@ -15,7 +15,7 @@ module.exports = () => {
     return this.createCreep(body, undefined, { role: roleName, working: false });
   };
 
-  StructureSpawn.prototype.createLongDistanceHarvester = function CreateLongDistanceHarvester(
+  StructureSpawn.prototype.createLongDistanceHarvester = function createLongDistanceHarvester(
     energy,
     numberOfWorkParts,
     home,
@@ -42,5 +42,16 @@ module.exports = () => {
       target,
       sourceIndex,
     });
+  };
+
+  StructureSpawn.prototype.createClaimer = function createClaimer(target) {
+    return this.createCreep([CLAIM, MOVE], undefined, { role: 'claimer', target });
+  };
+
+  StructureSpawn.prototype.configureSpawn = function configureSpawn(config) {
+    this.memory.config = {
+      ...this.memory.config,
+      ...config,
+    };
   };
 };
