@@ -61,7 +61,7 @@ const loop = () => {
     // Configure spawn
     if (!spawn.memory.config) {
       spawn.configureSpawn({
-        minimumNumberOfHarvesters: 2,
+        minimumNumberOfHarvesters: 1,
         minimumNumberOfUpgraders: 2,
         minimumNumberOfBuilders: 1,
         minimumNumberOfRepairers: 1,
@@ -96,7 +96,7 @@ const loop = () => {
     // const numberOfLongDistanceHarvestersEast = _.sum(Game.creeps, (c) => c.memory.role === 'longDistanceHarvester'
     //                                                                      && c.memory.target === 'E47S9');
 
-    const energy = Math.floor(spawn.room.energyCapacityAvailable);
+    const energy = Math.floor(spawn.room.energyCapacityAvailable / 2);
 
     let name;
 
